@@ -74,7 +74,7 @@ public class HandlerConfiguration {
   )
   public ExternalTaskHandler invoiceArchiverHandler() {
     return (externalTask, externalTaskService) -> {
-      TypedValue typedInvoice = externalTask.getVariableTyped("invoice");
+      TypedValue typedInvoice = externalTask.getVariableTyped("ni");
       Invoice invoice = (Invoice) typedInvoice.getValue();
       LOG.info("Invoice on process scope archived: {} {}", invoice, typedInvoice);
       externalTaskService.complete(externalTask);
