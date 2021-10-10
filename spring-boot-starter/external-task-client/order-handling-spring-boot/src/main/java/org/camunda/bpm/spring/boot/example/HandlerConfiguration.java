@@ -21,6 +21,7 @@ import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.variable.ClientValues;
 import org.camunda.bpm.engine.variable.value.ObjectValue;
 import org.camunda.bpm.engine.variable.value.TypedValue;
+import org.camunda.spin.DataFormats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +46,7 @@ public class HandlerConfiguration {
       // create an object typed variable with the serialization format XML
       ObjectValue invoiceValue = ClientValues
           .objectValue(invoice)
-          .serializationDataFormat("application/xml")
+          .serializationDataFormat(DataFormats.JSON_DATAFORMAT_NAME)
           .create();
 
       // add the invoice object and its id to a map
@@ -54,12 +55,12 @@ public class HandlerConfiguration {
       variables.put("invoice", invoiceValue);
 
       // select the scope of the variables
-      boolean isRandomSample = Math.random() <= 0.5;
-      if (isRandomSample) {
+//      boolean isRandomSample = Math.random() <= 0.5;
+//      if (isRandomSample) {
         externalTaskService.complete(externalTask, variables);
-      } else {
-        externalTaskService.complete(externalTask, null, variables);
-      }
+//      } else {
+//        externalTaskService.complete(externalTask, null, variables);
+//      }
 
       LOG.info("The External Task {} has been completed!", externalTask.getId());
 
@@ -75,7 +76,7 @@ public class HandlerConfiguration {
     return (externalTask, externalTaskService) -> {
       TypedValue typedInvoice = externalTask.getVariableTyped("invoice");
       Invoice invoice = (Invoice) typedInvoice.getValue();
-      LOG.info("Invoice on process scope archived: {}", invoice);
+      LOG.info("Invoice on process scope archived: {} {}", invoice, typedInvoice);
       externalTaskService.complete(externalTask);
     };
   }
